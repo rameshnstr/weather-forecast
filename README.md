@@ -1,6 +1,6 @@
 ## Weather Forecast
 
-This is an API wrapper for openweathermap.org which provides access to weather data. It shows the five day weather forecast details.
+This is an API wrapper for openweathermap.org which provides access to weather data. It shows the five day weather forecast details. Enter the city name in the text box and search it, the five day weather report will be displayed.
 
 ## The returned data contains elements such as:
 
