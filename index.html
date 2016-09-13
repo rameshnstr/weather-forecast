@@ -1,0 +1,82 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Weather Forecast</title>
+    <link rel="stylesheet" type="text/css" href="weather.css">
+    <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; width=device-width;">
+</head>
+<body ng-app="weatherApp">
+    <div ng-controller="indexController as Ctrl">
+        <div class="table-title">
+        <h3>Weather Forecast</h3>
+        <input type="text" class="search-txt" placeholder="Enter the City" ng-model="Ctrl.city" />
+        <input type="button" class="search-btn" ng-click="Ctrl.getWeather();" value="Search" />
+        </div>
+        <table class="table-fill">
+        <thead>
+            <tr>
+              <th class="text-left">Time</th>
+              <th class="text-left">Weather</th>
+              <th class="text-left">Min Temp</th>
+              <th class="text-left">Max Temp</th>
+              <th class="text-left">Pressure</th>
+              <th class="text-left">Humidity</th>
+            </tr>
+        </thead>
+        <tbody class="table-hover">
+            <tr ng-repeat="list in Ctrl.weather.list">
+              <td class="text-left">{{list.dt_txt}}</td>
+                <td class="text-left">
+                    <p>{{list.weather[0].main}}</p>
+                    <p>{{list.weather[0].description}}</p>
+                    <p><img src="http://openweathermap.org/img/w/{{list.weather[0].icon}}.png"/></p>
+                </td>
+
+                <td class="text-left">{{list.main.temp_min}}</td>
+                <td class="text-left">{{list.main.temp_max}}</td>
+                <td class="text-left">{{list.main.pressure}}</td>
+                <td class="text-left">{{list.main.humidity}}</td>
+            </tr>
+        </tbody>
+        </table>
+    </div>
+</body>
+
+<script src="http://res.cloudinary.com/primefusion/raw/upload/v1473318041/jquery.min_s14ikw.js"></script>
+<script src="http://res.cloudinary.com/primefusion/raw/upload/v1473317488/angular.min_qsoscr.js"></script>
+<script src="http://res.cloudinary.com/primefusion/raw/upload/v1473317278/bootstrap.min_gc99qk.js"></script>
+<script src="http://res.cloudinary.com/primefusion/raw/upload/v1473317449/angular-resource.min_ujw2nn.js"></script>
+<script src="http://res.cloudinary.com/primefusion/raw/upload/v1473317456/angular-route.min_f5hifn.js"></script>
+<script>
+    angular
+        .module('weatherApp', [
+            'ngResource',
+        ])
+        .constant("appid", "02d4bf6afaeafb1355b63df6a0d98d5a")
+        .constant("endpoint", "http://api.openweathermap.org/data/2.5")
+        .controller('indexController', ["Weather", function(Weather) {
+            var _this = this;
+            _this.getWeather = function() {
+                Weather.query({
+                    mode: "json",
+                    q: _this.city
+                }, {}, function(res) {
+                    _this.weather = res;
+                }, function(res) {
+                    _this.weather = res;
+                });
+            };
+        }])
+        .service("Weather", ['$resource', "endpoint", "appid", function($resource, endpoint, appid) {
+            return $resource(endpoint + '/forecast', {}, {
+                query: {
+                    method: 'GET',
+                    params: {
+                        "appid": appid
+                    }
+                }
+            })
+        }]);
+</script>
+
+</html>
